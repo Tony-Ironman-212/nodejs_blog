@@ -23,7 +23,7 @@ app.engine(
     defaultLayout: 'main',
     layoutsDir: path.join(__dirname, 'resources/views/layouts'),
     partialsDir: path.join(__dirname, 'resources/views/partials'),
-  })
+  }),
 );
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'resources/views'));
