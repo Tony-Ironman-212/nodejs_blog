@@ -1,0 +1,36 @@
+<h1>Example App: Search</h1>
+<div>
+  <form method="GET" action="/about">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Tên</label>
+      <input
+        type="text"
+        class="form-control"
+        id="exampleInputEmail1"
+        aria-describedby="emailHelp"
+        name="name"
+      />
+      <div id="emailHelp" class="form-text">
+        We'll never share your email with anyone else.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Địa chỉ</label>
+      <input
+        type="text"
+        class="form-control"
+        id="exampleInputPassword1"
+        name="address"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  {{#if name}}
+  <h3>tên bạn là {{ name }}</h3>
+  {{/if}}
+
+  {{#if address}}
+  <h3>địa chỉ của bạn là {{ address }}</h3>
+  {{/if}}
+</div>

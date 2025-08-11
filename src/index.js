@@ -15,6 +15,9 @@ app.use(morgan('dev'));
 // Cho phép truy cập file tĩnh trong thư mục public
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Cài và dùng middleware express.urlencoded() để xử lý dữ liệu từ form HTML.
+app.use(express.urlencoded({ extended: true }));
+
 // sử dụng handlebars làm view engine
 app.engine(
   '.hbs',
@@ -30,10 +33,41 @@ app.set('views', path.join(__dirname, 'resources/views'));
 
 // routes
 app.get('/', (req, res) => {
-  res.render('home', { title: 'Example App' });
+  // lấy query param "name"
+  const userName = req.query.name || 'Guest';
+  const userHobby = req.query.hobby || 'Unknown';
+
+  res.render('home', { title: 'Example App', userName, userHobby });
 });
+
 app.get('/about', (req, res) => {
-  res.render('about', { title: 'Example App: About' });
+  const userName = req.query.name;
+  const userAddress = req.query.address;
+  res.render('about', {
+    title: 'Example App: About',
+    name: userName,
+    address: userAddress,
+  });
+});
+
+app.get('/search', (req, res) => {
+  const userName = req.query.name;
+  const userAddress = req.query.address;
+  res.render('search', {
+    title: 'Example App: Search',
+    name: userName,
+    address: userAddress,
+  });
+});
+
+app.post('/search', (req, res) => {
+  const userName = req.body.name;
+  const userAddress = req.body.address;
+  res.render('search', {
+    title: 'Example App: Search',
+    name: userName,
+    address: userAddress,
+  });
 });
 
 app.listen(port, () => {
