@@ -3,20 +3,21 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const { engine } = require('express-handlebars'); // lấy engine
-const sass = require('sass');
+const route = require('./routes'); // import route
 
 // tạo server
 const app = express();
 const port = 3000;
 
 // Sử dụng morgan, HTTP logger
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 
 // Cho phép truy cập file tĩnh trong thư mục public
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Cài và dùng middleware express.urlencoded() để xử lý dữ liệu từ form HTML.
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // để xử lý dữ liệu JSON
 
 // sử dụng handlebars làm view engine
 app.engine(
@@ -31,45 +32,10 @@ app.engine(
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'resources/views'));
 
-// routes
-app.get('/', (req, res) => {
-  // lấy query param "name"
-  const userName = req.query.name || 'Guest';
-  const userHobby = req.query.hobby || 'Unknown';
+// dùng route làm gọn các đường dẫn địa chỉ truy cập
+route(app);
 
-  res.render('home', { title: 'Example App', userName, userHobby });
-});
-
-app.get('/about', (req, res) => {
-  const userName = req.query.name;
-  const userAddress = req.query.address;
-  res.render('about', {
-    title: 'Example App: About',
-    name: userName,
-    address: userAddress,
-  });
-});
-
-app.get('/search', (req, res) => {
-  const userName = req.query.name;
-  const userAddress = req.query.address;
-  res.render('search', {
-    title: 'Example App: Search',
-    name: userName,
-    address: userAddress,
-  });
-});
-
-app.post('/search', (req, res) => {
-  const userName = req.body.name;
-  const userAddress = req.body.address;
-  res.render('search', {
-    title: 'Example App: Search',
-    name: userName,
-    address: userAddress,
-  });
-});
-
+// lắng nghe server ở port 3000
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
