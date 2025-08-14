@@ -6,6 +6,7 @@ class NewsController {
     });
   }
 
+  // [GET] /news/:slug
   show(req, res) {
     const course = req.query.course;
     const price = req.query.price;

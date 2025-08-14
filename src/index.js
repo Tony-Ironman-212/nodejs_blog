@@ -3,7 +3,13 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const { engine } = require('express-handlebars'); // lấy engine
+
+// local import
 const route = require('./routes'); // import route
+const db = require('./config/db'); // import db
+
+// connect to DB
+db.connect();
 
 // tạo server
 const app = express();
@@ -30,12 +36,12 @@ app.engine(
   }),
 );
 app.set('view engine', '.hbs');
-app.set('views', path.join(__dirname, 'resources/views'));
+app.set('views', path.join(__dirname, 'resources', 'views'));
 
 // dùng route làm gọn các đường dẫn địa chỉ truy cập
 route(app);
 
 // lắng nghe server ở port 3000
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`App listening at http://localhost:${port}`);
 });

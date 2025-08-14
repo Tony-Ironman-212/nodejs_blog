@@ -1,9 +1,17 @@
+const Course = require('../models/Course');
+
 class SiteController {
   // [GET] /
-  index(req, res) {
-    const userName = req.query.name || 'Guest';
-    const userHobby = req.query.hobby || 'Unknown';
-    res.render('home', { title: 'Example App', userName, userHobby });
+  index(req, res, next) {
+    Course.find({})
+      .lean()
+      .then((courses) => {
+        res.render('home', {
+          title: 'Example App - Home',
+          courses,
+        });
+      })
+      .catch(next);
   }
 
   // [GET] /search
