@@ -18,15 +18,74 @@
         <td>{{ this.createdAt }}</td>
         <td>
           <a href="/courses/{{ this._id }}/edit" class="btn btn-link">Sửa</a>
-          <form
-            method="POST"
-            action="/courses/{{ this._id }}/delete?_method=DELETE"
+          <a
+            href="#"
+            class="btn btn-link"
+            data-bs-toggle="modal"
+            data-bs-target="#delete-course-modal"
+            data-id="{{ this._id }}"
+            >Xóa</a
           >
-            <button type="submit" class="btn btn-link">Xóa</button>
-          </form>
         </td>
       </tr>
       {{/each}}
     </tbody>
   </table>
 </div>
+
+{{!-- confirm delete course --}}
+<div id="delete-course-modal" class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xác nhận xóa khóa học!!!</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn chắc chắn muốn xóa đúng không?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Hủy
+        </button>
+        <button id="btn-delete-course" type="button" class="btn btn-danger">
+          Xóa
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- hidden form for DELETE --}}
+<form name="delete-course-form" method="POST"></form>
+
+{{!-- script cho modal --}}
+<script>
+  const deleteCourseModal = document.getElementById('delete-course-modal');
+  const deleteButtons = document.querySelectorAll('#btn-delete-course');
+  var courseId;
+  var deleteForm = document.forms['delete-course-form'];
+
+  if (deleteCourseModal) {
+    deleteCourseModal.addEventListener('show.bs.modal', (event) => {
+      const button = event.relatedTarget;
+      console.log(button);
+      courseId = button.getAttribute('data-id');
+      console.log(courseId);
+    });
+  }
+
+  if (deleteButtons) {
+    deleteButtons.forEach((button) => {
+      button.addEventListener('click', (event) => {
+        deleteForm.action = '/courses/' + courseId + '?_method=DELETE';
+        deleteForm.submit();
+      });
+    });
+  }
+</script>
