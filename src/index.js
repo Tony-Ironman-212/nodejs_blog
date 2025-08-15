@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const { engine } = require('express-handlebars'); // lấy engine
+const methodOverride = require('method-override'); // để sử dụng phương thức PUT, DELETE trong form
 
 // local import
 const route = require('./routes'); // import route
@@ -33,10 +34,16 @@ app.engine(
     defaultLayout: 'main',
     layoutsDir: path.join(__dirname, 'resources/views/layouts'),
     partialsDir: path.join(__dirname, 'resources/views/partials'),
+    helpers: {
+      sum: (a, b) => a + b,
+    },
   }),
 );
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'resources', 'views'));
+
+// override with POST having ?_method=DELETE
+app.use(methodOverride('_method'));
 
 // dùng route làm gọn các đường dẫn địa chỉ truy cập
 route(app);
