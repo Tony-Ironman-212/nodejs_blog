@@ -50,9 +50,27 @@ class CourseController {
 
   // [DELETE] /courses/:id
   destroy(req, res, next) {
-    Course.findByIdAndDelete(req.params.id)
+    Course.delete({ _id: req.params.id }) //soft delete
       .then(() => {
-        res.redirect('back');
+        res.redirect('/me/stored/courses');
+      })
+      .catch(next);
+  }
+
+  // [DELETE] /courses/:id/force
+  forceDestroy(req, res, next) {
+    Course.deleteOne({ _id: req.params.id }) //hard delete
+      .then(() => {
+        res.redirect('/me/trash/courses');
+      })
+      .catch(next);
+  }
+
+  // [PATCH] /courses/:id/restore
+  restore(req, res, next) {
+    Course.restore({ _id: req.params.id }) //restore
+      .then(() => {
+        res.redirect('/me/trash/courses');
       })
       .catch(next);
   }
