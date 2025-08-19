@@ -8,6 +8,7 @@ const methodOverride = require('method-override'); // để sử dụng phương
 // local import
 const route = require('./routes'); // import route
 const db = require('./config/db'); // import db
+const SortMiddleware = require('./app/middlewares/SortMiddleware'); // import SortMiddleware
 
 // connect to DB
 db.connect();
@@ -36,14 +37,37 @@ app.engine(
     partialsDir: path.join(__dirname, 'resources/views/partials'),
     helpers: {
       sum: (a, b) => a + b,
+      sortable: (field, sort) => {
+        const sortType = field === sort.column ? sort.type : 'default';
+        const iconTypes = {
+          default: '<i class="fa-solid fa-sort"></i>',
+          asc: '<i class="fa-solid fa-arrow-down-short-wide"></i>',
+          desc: '<i class="fa-solid fa-arrow-down-wide-short"></i>',
+        };
+        const types = {
+          default: 'desc',
+          asc: 'desc',
+          desc: 'asc',
+        };
+        const iconType = iconTypes[sortType];
+        const type = types[sortType];
+
+        return `<a href="?_sort&column=${field}&type=${type}">
+          ${iconType}
+        </a>`;
+      },
     },
   }),
 );
+
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'resources', 'views'));
 
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'));
+
+// cho phép sử dụng các middleware do mình tạo ra.
+app.use(SortMiddleware);
 
 // dùng route làm gọn các đường dẫn địa chỉ truy cập
 route(app);
