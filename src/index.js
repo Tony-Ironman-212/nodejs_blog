@@ -35,28 +35,7 @@ app.engine(
     defaultLayout: 'main',
     layoutsDir: path.join(__dirname, 'resources/views/layouts'),
     partialsDir: path.join(__dirname, 'resources/views/partials'),
-    helpers: {
-      sum: (a, b) => a + b,
-      sortable: (field, sort) => {
-        const sortType = field === sort.column ? sort.type : 'default';
-        const iconTypes = {
-          default: '<i class="fa-solid fa-sort"></i>',
-          asc: '<i class="fa-solid fa-arrow-down-short-wide"></i>',
-          desc: '<i class="fa-solid fa-arrow-down-wide-short"></i>',
-        };
-        const types = {
-          default: 'desc',
-          asc: 'desc',
-          desc: 'asc',
-        };
-        const iconType = iconTypes[sortType];
-        const type = types[sortType];
-
-        return `<a href="?_sort&column=${field}&type=${type}">
-          ${iconType}
-        </a>`;
-      },
-    },
+    helpers: require('./helpers/handlebars'), // sử dụng các helper đã định nghĩa
   }),
 );
 

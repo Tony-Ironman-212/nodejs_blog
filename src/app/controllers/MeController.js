@@ -3,25 +3,9 @@ const Course = require('../models/Course');
 class MeController {
   // [GET] /me/stored/courses
   storedCourses(req, res, next) {
-    let courseQuery = Course.find().lean();
-    if ('_sort' in req.query) {
-      if (req.query.column === 'level') {
-        // sort number
-        courseQuery = courseQuery.sort({
-          [req.query.column]: req.query.type,
-        });
-      } else {
-        courseQuery = courseQuery
-          .collation({ locale: 'vi', strength: 2 })
-          .sort({
-            [req.query.column]: req.query.type,
-          });
-      }
-    }
-
     Promise.all([
       Course.countDocumentsWithDeleted({ deleted: true }),
-      courseQuery,
+      Course.find().lean().sortable(req),
     ])
       .then(([deletedCount, courses]) => {
         res.render('me/stored-courses', {

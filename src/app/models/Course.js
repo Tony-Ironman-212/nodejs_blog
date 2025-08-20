@@ -17,6 +17,17 @@ const CourseSchema = new Schema(
   },
 );
 
+// custom query helpers
+CourseSchema.query.sortable = function (req) {
+  if ('_sort' in req.query) {
+    const isValidType = ['asc', 'desc'].includes(req.query.type);
+    return this.collation({ locale: 'vi', strength: 2 }).sort({
+      [req.query.column]: isValidType ? req.query.type : 'desc',
+    });
+  }
+  return this;
+};
+
 // add plugin
 mongoose.plugin(slug);
 CourseSchema.plugin(mongooseDelete, {
